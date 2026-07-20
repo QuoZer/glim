@@ -7,7 +7,13 @@
   */
   "odometry_estimation": {
     "so_name": "libodometry_estimation_cpu.so",
-    // Initialization params
+    // Initialization params (valid modes: LOOSE, NAIVE -- no TIGHT in this build).
+    // LOOSE estimates initial gravity + gyro/accel bias over the window, so it
+    // MUST see a still stretch as its FIRST frames -> start bag playback at the
+    // early 23-28s stop (5s still): `run_glim_incontainer.sh 0 1.0 24`, which maps
+    // ~13 min (almost the whole traverse) with a clean init. Gyro bias floor when
+    // still ~0.7 deg/s -> that is what LOOSE locks in here. (Other stops if needed:
+    // 228s ~3.8min, or a 12s one at 722s for just the tail.)
     "initialization_mode": "LOOSE",
     "initialization_window_size": 3.0,
     "init_pose_damping_scale": 1e10,
@@ -17,7 +23,6 @@
     "isam2_relinearize_skip": 1,
     "isam2_relinearize_thresh": 0.1,
     "fix_imu_bias": false,
-    "compute_covs": false,
     // Registration settings
     "registration_type": "GICP",
     "max_iterations": 16,

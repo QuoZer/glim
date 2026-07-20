@@ -45,15 +45,21 @@
   "sensors": {
     // IMU config
     "imu_acc_noise": 0.05,
-    "imu_gyro_noise": 0.02,
+    "imu_gyro_noise": 0.02, // back to full weight (was 0.05, de-weighted for the ~0.5deg/s HAP gyro bias)
     "imu_int_noise": 0.001,
-    "imu_bias_noise": 1e-5,
+    "imu_bias_noise": 1e-4, // looser random walk so the gyro bias can converge/track
     // LiDAR config
+    // merge_clouds.py publishes the fused cloud in the LEFT sensor frame and
+    // PRESERVES per-point timestamps (absolute ns). Both HAPs are epoch-synced
+    // (verified from the bag), so cross-sensor deskew is clock-consistent -> keep on.
     "global_shutter_lidar": false,
+    // Identity: the fused cloud is expressed in the left IMU frame, so no
+    // hand-authored lever arm can tilt the modelled gravity direction (which was
+    // bending straight tunnels in pitch/Z).
     "T_lidar_imu": [
-      0.000,
-      0.000,
-      0.000,
+      0.0,
+      0.0,
+      0.0,
       0.0,
       0.0,
       0.0,
